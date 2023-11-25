@@ -8,6 +8,17 @@ import { AppModule } from './app.module';
 
 let server: Handler;
 
+
+process.on('unhandledRejection', (reason) => {
+  // tslint:disable-next-line:no-console
+  console.error(reason);
+});
+
+process.on('uncaughtException', (reason) => {
+  // tslint:disable-next-line:no-console
+  console.error(reason);
+});
+
 async function bootstrap(): Promise<Handler> {
   const app = await NestFactory.create(AppModule);
   app.enableCors({

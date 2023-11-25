@@ -55,8 +55,8 @@ export class CartController {
   // @UseGuards(JwtAuthGuard)
   // @UseGuards(BasicAuthGuard)
   @Put()
-  updateUserCart(@Query('userId') userId: string, @Body() body) { // TODO: validate body payload...
-    const cart = this.cartService.updateByUserId(userId, body)
+  async updateUserCart(@Query('userId') userId: string, @Body() body) { // TODO: validate body payload...
+    const cart = await this.cartService.updateByUserId(userId, body)
 
     return {
       statusCode: HttpStatus.OK,

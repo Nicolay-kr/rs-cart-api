@@ -39,10 +39,12 @@ export class CartService {
 
   async findOrCreateByUserId(userId: string, status?: Status) {
     const userCart = await this.findByUserId(userId);
-
     if (userCart) {
       return userCart;
     }
+
+    console.log('should not be there', )
+    
 
     return this.createByUserId({
       user_id: userId,
@@ -57,9 +59,8 @@ export class CartService {
       count: number;
     }[],
   ) {
-    const { id: cart_id, ...cart } = await this.findOrCreateByUserId(userId);
-
-    cart.items = items.map(item => ({ ...item, cart_id }));
+    const cart = await this.findOrCreateByUserId(userId);
+    cart.items = items.map(item => ({ ...item, cart_id: cart.id}));
 
     return this.cartsRepository.save(cart);
   }
