@@ -17,10 +17,10 @@ export class UsersService {
   }
 
   createOne({ name, password }: User): User {
-    const id = v4(v4());
+    const id = v4();
     const newUser = { id: name || id, name, password };
 
-    this.users[ id ] = newUser;
+    this.users[ id] = newUser;
 
     return newUser;
   }
