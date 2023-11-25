@@ -1,0 +1,30 @@
+service: cart-service
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-central-1
+  timeout: 20
+  environment:
+    POSTGRESQL_HOST: productsinstance.ce8e7kdvoyzs.eu-central-1.rds.amazonaws.com 
+    POSTGRESQL_USER: postgres
+    POSTGRESQL_PASSWORD: 8PPCLi3CEBPZiZ2Ma9pr
+    POSTGRESQL_DATABASE: productsdb
+    POSTGRESQL_PORT: 5432
+
+functions:
+  main:
+    handler: dist/main.handler
+    events:
+      - http:
+          method: any
+          path: /
+          cors: true
+      - http:
+          method: any
+          path: '{proxy+}'
+          cors: true
