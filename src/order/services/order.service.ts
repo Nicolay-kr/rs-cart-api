@@ -32,6 +32,12 @@ export class OrderService {
     });
   }
 
+  async findByCart(cart_id): Promise<Orders> {
+    return await this.ordersRepository.findOne({
+      where: { cart_id },
+    });
+  }
+
   async createOrder(data: any) {
     const order: Orders = new Orders();
     order.user_id = data.userId;

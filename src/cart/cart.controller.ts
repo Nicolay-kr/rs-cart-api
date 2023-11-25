@@ -92,11 +92,21 @@ export class CartController {
 
       return {
         statusCode: HttpStatus.BAD_REQUEST,
-        message: 'Cart is empty',
+        message: 'This user does not have cart or cart is empty',
       }
     }
 
-    const order = await this.orderService.createOrder({
+    let order = await this.orderService.findByCart(cart.id)
+
+    if(order){
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'OK',
+        data: { order }
+      }
+    }
+
+    order = await this.orderService.createOrder({
       userId: cart.user_id,
       cartId: cart.id,
       cart,
