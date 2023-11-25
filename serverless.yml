@@ -15,16 +15,6 @@ provider:
     POSTGRESQL_PASSWORD: 8PPCLi3CEBPZiZ2Ma9pr
     POSTGRESQL_DATABASE: productsdb
     POSTGRESQL_PORT: 5432
-  # iamRoleStatements:
-  #   - Effect: Allow
-  #     Action:
-  #       - rds-db:connect
-  #     Resource: 
-  #       Fn::Sub: "arn:aws:rds:eu-central-1:244663611855:db:productsinstance"
-  #     Condition:
-  #       StringEquals:
-  #         "aws:PrincipalTag/service": "rds.amazonaws.com"
-  #         "aws:PrincipalTag/dbname": "productsinstance"
 
 functions:
   main:
