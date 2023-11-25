@@ -47,7 +47,7 @@ export class CartController {
     this.cartService.removeByUserId(userId);
 
     return {
-      statusCode: HttpStatus.OK,
+      statusCode: HttpStatus.NO_CONTENT,
       message: 'OK',
     }
   }
@@ -68,10 +68,21 @@ export class CartController {
     }
   }
 
-  
-
   // @UseGuards(JwtAuthGuard)
   // @UseGuards(BasicAuthGuard)
+  @Post()
+  async createCart(@Query('userId') userId: string, @Body() body) {
+    const cart = await this.cartService.updateByUserId(userId, body)
+
+    return {
+      statusCode: HttpStatus.CREATED,
+      message: 'OK',
+      data: {
+        cart,
+      }
+    }
+  }
+
   @Post('checkout')
   async checkout(@Req() req: AppRequest, @Body() body) {
     const userId = getUserIdFromRequest(req);
