@@ -1,8 +1,8 @@
-import { Controller, Get, Delete, Put, Body, Req, Post, UseGuards, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, Delete, Put, Body, Req, Post, Param, UseGuards, HttpStatus, Query } from '@nestjs/common';
 
 // import { BasicAuthGuard, JwtAuthGuard } from '../auth';
 import { OrderService } from '../order';
-import { AppRequest, getUserIdFromRequest } from '../shared';
+// import { AppRequest, getUserIdFromRequest } from '../shared';
 
 // import { calculateCartTotal } from './models-rules';
 import { CartService } from './services';
@@ -11,7 +11,7 @@ import { CartService } from './services';
 export class CartController {
   constructor(
     private cartService: CartService,
-    // private orderService: OrderService
+    private orderService: OrderService
   ) { }
 
   @Get('all')
@@ -83,35 +83,29 @@ export class CartController {
     }
   }
 
-  @Post('checkout')
-  async checkout(@Req() req: AppRequest, @Body() body) {
-    const userId = getUserIdFromRequest(req);
+  @Post('checkout/:userId')
+  async checkout(@Param('userId') userId: string) {
+    console.log('userId', userId)
     const cart = await this.cartService.findByUserId(userId);
 
     if (!(cart && cart.items.length)) {
-      const statusCode = HttpStatus.BAD_REQUEST;
-      req.statusCode = statusCode
 
       return {
-        statusCode,
+        statusCode: HttpStatus.BAD_REQUEST,
         message: 'Cart is empty',
       }
     }
 
-    // const { id: cartId, items } = cart;
-    // const order = this.orderService.create({
-    //   ...body, // TODO: validate and pick only necessary data
-    //   userId,
-    //   cartId,
-    //   items,
-    //   total,
-    // });
-    // this.cartService.removeByUserId(userId);
+    const order = await this.orderService.createOrder({
+      userId: cart.user_id,
+      cartId: cart.id,
+      cart,
+    });
 
     return {
-      statusCode: HttpStatus.OK,
+      statusCode: HttpStatus.CREATED,
       message: 'OK',
-      // data: { order }
+      data: { order }
     }
   }
 }
