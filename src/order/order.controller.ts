@@ -1,4 +1,4 @@
-import { Controller, Get, Delete, Param, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, Delete, Param, HttpStatus, Query, Body, Put } from '@nestjs/common';
 
 import { OrderService } from './services';
 
@@ -53,17 +53,22 @@ export class OrderController {
     }
   }
 
+  @Put(':id')
+  async updateById(@Param('id') id: string, @Body() body) { // TODO: validate body payload...
+    const order = await this.orderService.updateById(id, body);
+    if (!order) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: `Order with id ${id} was not find`,
+      }
+    }
 
-  // @Put()
-  // async updateById(@Query('orderId') orderId: string, @Body() body) { // TODO: validate body payload...
-  //   const cart = await this.orderService.updateById(orderId, body)
-
-  //   return {
-  //     statusCode: HttpStatus.OK,
-  //     message: 'OK',
-  //     data: {
-  //       cart,
-  //     }
-  //   }
-  // }
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'OK',
+      data: {
+        order,
+      }
+    }
+  }
 }

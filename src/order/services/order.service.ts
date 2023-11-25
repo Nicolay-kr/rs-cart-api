@@ -45,16 +45,15 @@ export class OrderService {
     return this.ordersRepository.delete({ id });
   }
 
-  // async updateById(orderId, data) {
-  //   const order = this.findById(orderId);
+  async updateById(id, data) {
+    let order = await this.findById(id);
+    if (order){
+      order = {...order,...data}
+      await this.ordersRepository.save(order);
+    }else{
+      return null
+    }
 
-  //   if (!order) {
-  //     throw new Error('Order does not exist.');
-  //   }
-
-  //   this.orders[ orderId ] = {
-  //     ...data,
-  //     id: orderId,
-  //   }
-  // }
+    return order
+  }
 }
